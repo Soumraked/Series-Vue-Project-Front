@@ -5,13 +5,16 @@
     >
     </v-parallax>
     <info :data="data"/>
-    <Chapter :chapters="chapter" :subtitles="data.subtitles" :name="data.name"/>
+    <Chapter :chapters="data.chapter" :subtitles="data.subtitles" :name="data.name"/>
   </v-container>
 </template>
 
 <script>
 import Info from '@/components/Info.vue'
 import Chapter from '@/components/Chapter.vue'
+
+import {mapState} from 'vuex';
+import {mapMutations} from 'vuex';
 export default {
   name: 'SerieDetails',
   components: {
@@ -21,31 +24,39 @@ export default {
   data(){
     return{
       data: {},
-      chapter: {},
     }
   },
   created(){
+    // if(!this.save.includes('SerieDetailsView')){
+    //   this.getInfo();
+    //   this.setSave('SerieDetailsView');
+    //   console.log('Guardando datos');
+    // }else{
+    //   console.log('Cargando datos');
+    //   console.log(this.serieDataVuex);
+    //   let id = this.$route.params.id;
+    //   this.data = this.serieDataVuex.id;
+    // }
     this.getInfo();
-    this.getChapter();
   },
   methods:{
+    // ...mapMutations(['setSave','setSerieData']),
     async getInfo(){
       try {
-        let data = await this.axios.get(`/getApi/getSerie/${this.$route.params.id}`);
+        let data = await this.axios.get('/getApi/getSerie/'+this.$route.params.id);
         this.data = data.data;
+        // let dataAux = data.data;
+        // dataAux.id = this.$route.params.id.toString();
+        // this.setSerieData(dataAux);
       } catch (error) {
         console.log(error);
       }
     },
-    async getChapter(){
-      try {
-        let data = await this.axios.get(`chapter/get/${this.$route.params.id}`);
-        this.chapter = data.data.data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  }
+
+  },
+  // computed:{
+  //   ...mapState(['save','serieDataVuex']),
+  // }
   
 }
 </script>
