@@ -2,7 +2,6 @@
   <v-container>
     <v-card
       class="d-flex flex-wrap justify-space-around"
-      color="grey lighten-2"
       flat
       tile
       min-height="200"
