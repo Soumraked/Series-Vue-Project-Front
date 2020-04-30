@@ -20,7 +20,11 @@
             </v-list-item-content>
 
           </v-list-item>
-        </v-list>
+
+          <div v-if="!eps" align="center">
+            <p>No se encontraron episodios ingresados para esta serie.</p>
+          </div>
+      </v-list>
       </v-lazy>
     </v-responsive>
   </v-responsive>
@@ -28,7 +32,7 @@
 
 <script>
   export default {
-    props: ['chapters', 'subtitles', 'name'],
+    props: ['chapters', 'subtitles', 'name', 'eps'],
     name: 'Chapter',
     data: () => ({
       isActive: false,

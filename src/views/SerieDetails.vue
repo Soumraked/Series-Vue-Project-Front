@@ -5,7 +5,7 @@
     >
     </v-parallax>
     <info :data="data"/>
-    <Chapter :chapters="data.chapter" :subtitles="data.subtitles" :name="data.name"/>
+    <Chapter :chapters="data.chapter" :subtitles="data.subtitles" :name="data.name" :eps="eps"/>
   </v-container>
 </template>
 
@@ -24,6 +24,7 @@ export default {
   data(){
     return{
       data: {},
+      eps: true,
     }
   },
   created(){
@@ -45,6 +46,9 @@ export default {
       try {
         let data = await this.axios.get('/getApi/getSerie/'+this.$route.params.id);
         this.data = data.data;
+        if(data.data.chapter.length == 0){
+          this.eps = false;
+        }
         // let dataAux = data.data;
         // dataAux.id = this.$route.params.id.toString();
         // this.setSerieData(dataAux);
