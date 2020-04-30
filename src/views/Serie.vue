@@ -7,7 +7,7 @@
       tile
       min-height="200"
     >
-      <div v-for="item of seriesData">
+      <div v-for="item in seriesData" :key="item.id">
         <Card :serie="item"/>
       </div>
     </v-card>
@@ -40,7 +40,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
-    }
+    },
   }
 }
 </script>

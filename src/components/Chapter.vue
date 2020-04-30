@@ -1,0 +1,43 @@
+<template>
+  <v-responsive class="overflow-y-auto" max-height="300" >
+    <v-responsive class="pa-2" >
+      <v-lazy
+        v-model="isActive"
+        :options="{
+          threshold: .5
+        }"
+        min-height="200"
+        transition="fade-transition"
+      >
+        <v-list>
+          <v-list-item
+            v-for="item in chapters"
+            :key="item.id"
+            @click="toChapter(item.number)"
+          >
+            <v-list-item-content>
+              <v-list-item-title v-text="name + ' ' + item.number + ' sub ' + subtitles"></v-list-item-title>
+            </v-list-item-content>
+
+          </v-list-item>
+        </v-list>
+      </v-lazy>
+    </v-responsive>
+  </v-responsive>
+</template>
+
+<script>
+  export default {
+    props: ['chapters', 'subtitles', 'name'],
+    name: 'Chapter',
+    data: () => ({
+      isActive: false,
+    }),
+    methods:{
+      toChapter(number){
+        this.$router.push(this.$router.history.current.fullPath+'/'+number);
+      },
+      
+    }
+  }
+</script>
