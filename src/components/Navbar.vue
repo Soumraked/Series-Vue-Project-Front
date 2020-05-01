@@ -4,9 +4,20 @@
   >
     <v-toolbar >
       
-
-      <v-toolbar-title><span>Monos Otakos</span></v-toolbar-title>
-
+      <a style="color:#000;">
+      <v-toolbar-title @click="toRedirect()"><span>Monos Otakos</span></v-toolbar-title>
+      </a>
+      <v-toolbar-items>
+          <v-btn text >
+            <span>Inicio</span>
+          </v-btn>
+          <v-btn text>
+            <span>Animes</span>
+          </v-btn>
+          <v-btn text>
+            <span>En emisión</span>
+          </v-btn>
+      </v-toolbar-items>
       <v-spacer></v-spacer>
 
       <v-col cols="12" sm="6" md="3">
@@ -22,3 +33,15 @@
     </v-toolbar>
   </v-card>
 </template>
+
+<script>
+export default {
+  methods:{
+    toRedirect(){
+      if(this.$router.history.current.fullPath != '/'){
+        this.$router.push('/');
+      }
+    },
+  }
+}
+</script>
