@@ -7,7 +7,6 @@
           <!-- Imagen (columna 1) -->
           <v-col align="center" justify="center" sm="4">
             <v-img
-              width="250"
               :src="data.thumbnail"
               class="px-5"
             ></v-img>
