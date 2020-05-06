@@ -1,9 +1,17 @@
 <template>
   <div>
-    <div v-if="exist" class="container">
-      <h2>{{name}}</h2>
-      <d-player :options="options"
-        @play="play"
+    <v-container v-if="exist">
+      <h2 class="pa-0 ma-0 pt-12">{{name}}</h2>
+      <v-img 
+        src='https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media' 
+        @click="switchHandle" 
+        class="videoBox"
+        v-if="changeVideo"
+      ></v-img>
+
+      <d-player 
+        :style="styleVideo"
+        :options="options"
         ref="player">
       </d-player>
       <!-- Inicio chips -->
@@ -19,7 +27,7 @@
         Siguiente <v-icon right>mdi-arrow-right-thick</v-icon>
       </v-chip>
       <!-- Fin chips -->
-    </div>
+    </v-container>
     <div v-if="!exist" class="container">
       Entrada inválida, vuelva al inicio y verifique la ruta.
     </div>
@@ -38,6 +46,7 @@ export default {
   data(){
     return{
       name: '',
+      styleVideo: 'display: none;',
       disabledLeft: false,
       disabledRight: false,
       nextChapter: '',
@@ -46,18 +55,18 @@ export default {
       exist: true,
       options: {
         video: {
-          url: '',
-          pic: 'https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media'
+          url: ''
         },
         autoplay: false,
       },
       player: null,
-      changeVideo: false,
+      changeVideo: true,
     }
   },
   created(){
-    this.getInfo();
     this.player = null;
+    this.getInfo();
+    this.getChapters();
   },
   mounted() {
     this.player = this.$refs.player.dp;
@@ -73,7 +82,8 @@ export default {
         this.exist = false;
         console.log(error);
       }
-
+    },
+    async getChapters(){
       try{
         let data2 = await this.axios.get(`/chapter/get/${this.$route.params.id}`);
         let data3 = data2.data.data;
@@ -90,21 +100,14 @@ export default {
         }else{
           this.disabledLeft = true;
         }
-        
       }catch{
         this.exist = false;
         console.log(error);
       }
     },
-    play() {
-      if(!this.changeVideo){
-        this.player.switchVideo({
-          url: this.url
-        });
-        this.changeVideo = true;
-      }      
-    },
     switchHandle() {
+      this.changeVideo = false;
+      this.styleVideo = 'display: block;'
       this.player.switchVideo({
         url: this.url
       })
@@ -131,6 +134,10 @@ export default {
 </script>
 
 <style>
+  .videoBox {
+    width: 800px;
+    margin: 50px auto;
+  }
   body {
     margin: 0;
     padding: 0;
@@ -155,6 +162,18 @@ export default {
   }
   @media (max-width: 768px) {
     .dplayer {
+      width: 90%;
+    }
+    h1 {
+      font-size: 30px;
+    }
+    h2 {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .videoBox {
       width: 90%;
     }
     h1 {
