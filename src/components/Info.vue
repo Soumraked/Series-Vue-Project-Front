@@ -17,7 +17,7 @@
           <v-col cols="auto" sm="7">
             <v-row class="flex-column" justify="center" >
               <v-col class="px-5">
-                {{data.name}}
+                <h3>{{data.name}}</h3>
               </v-col>
 
               <v-col class="px-5">
@@ -25,11 +25,11 @@
               </v-col>
 
               <v-col class="px-5">
-                Fecha de emisión: {{data.date}}
+                <p>Fecha de emisión: {{data.date}}</p>
               </v-col>
 
-              <v-col class="px-5">
-                Estado: {{data.status}}
+              <v-col class="px-5 py-0">
+                <p>Estado: {{data.status}}</p>
               </v-col>
             </v-row>
           </v-col>
