@@ -5,13 +5,13 @@
     <v-toolbar >
       
       <a style="color:#000;">
-      <v-toolbar-title @click="toRedirect()"><span>Monos Otakos</span></v-toolbar-title>
+      <v-toolbar-title @click="toRedirect('/')"><span>Monos Otakos</span></v-toolbar-title>
       </a>
       <v-toolbar-items>
           <v-btn text >
             <span>Inicio</span>
           </v-btn>
-          <v-btn text>
+          <v-btn text @click="toRedirect('/')">
             <span>Animes</span>
           </v-btn>
           <v-btn text>
@@ -37,9 +37,9 @@
 <script>
 export default {
   methods:{
-    toRedirect(){
-      if(this.$router.history.current.fullPath != '/'){
-        this.$router.push('/');
+    toRedirect(route){
+      if(this.$router.history.current.fullPath != route){
+        this.$router.push(route);
       }
     },
   }

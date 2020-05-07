@@ -57,7 +57,7 @@ export default {
         video: {
           url: ''
         },
-        autoplay: false,
+        autoplay: true
       },
       player: null,
       changeVideo: true,
@@ -65,8 +65,8 @@ export default {
   },
   created(){
     this.player = null;
-    this.getInfo();
     this.getChapters();
+    this.getInfo();
   },
   mounted() {
     this.player = this.$refs.player.dp;
@@ -110,7 +110,11 @@ export default {
       this.styleVideo = 'display: block;'
       this.player.switchVideo({
         url: this.url
-      })
+      });
+
+      setTimeout(() => {
+        this.player.play()
+      }, 300)
     },
     toEpisode(option){
       switch (option){
