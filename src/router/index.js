@@ -19,6 +19,11 @@ Vue.use(VueRouter)
     path: '/serie/:id/:number',
     name: 'SerieVideo',
     component: () => import('../views/SerieVideo.vue')
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: () => import('../views/Admin.vue')
   }
 ]
 
