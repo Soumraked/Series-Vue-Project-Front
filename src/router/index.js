@@ -24,6 +24,11 @@ Vue.use(VueRouter)
     path: '/admin',
     name: 'Admin',
     component: () => import('../views/Admin.vue')
+  },
+  {
+    path: '/admin2',
+    name: 'Admin2',
+    component: () => import('../views/Admin2.vue')
   }
 ]
 

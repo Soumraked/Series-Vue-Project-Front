@@ -41,7 +41,7 @@
 
     <v-container>
       <Navbar/>
-      
+        
       <v-content>
         <router-view/>
       </v-content>
