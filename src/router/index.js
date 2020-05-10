@@ -7,6 +7,11 @@ Vue.use(VueRouter)
   const routes = [
   {
     path: '/',
+    name: 'LastChapter',
+    component: () => import('../views/LastChapter.vue')
+  },
+  {
+    path: '/anime',
     name: 'Serie',
     component: Serie
   },

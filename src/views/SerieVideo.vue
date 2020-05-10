@@ -31,6 +31,23 @@
     <div v-if="!exist" class="container">
       Entrada inválida, vuelva al inicio y verifique la ruta.
     </div>
+
+    <div class="text-center">
+
+      <v-snackbar
+        v-model="snackbar"
+        :timeout="5000"
+      >
+        Si el video no comienza prueba recargar la página o reportar el capítulo.
+        <v-btn
+          color="blue"
+          text
+          @click="snackbar = false"
+        >
+          Cerrar
+        </v-btn>
+      </v-snackbar>
+    </div>
   </div>
 </template>
 
@@ -45,6 +62,7 @@ export default {
   },
   data(){
     return{
+      snackbar: true,
       name: '',
       styleVideo: 'display: none;',
       disabledLeft: false,
@@ -106,15 +124,14 @@ export default {
       }
     },
     switchHandle() {
-      this.changeVideo = false;
-      this.styleVideo = 'display: block;'
       this.player.switchVideo({
         url: this.url
       });
-
+      this.changeVideo = false;
+      this.styleVideo = 'display: block;'
       setTimeout(() => {
         this.player.play()
-      }, 300)
+      }, 500)
     },
     toEpisode(option){
       switch (option){
@@ -132,6 +149,9 @@ export default {
         default:
           console.log('Error desconocido.');
       }
+    },
+    play(){
+      console.log('En play');
     }
   },  
 }

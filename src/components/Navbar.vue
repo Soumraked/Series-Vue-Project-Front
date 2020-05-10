@@ -8,10 +8,10 @@
       <v-toolbar-title @click="toRedirect('/')"><span>Monos Otakos</span></v-toolbar-title>
       </a>
       <v-toolbar-items>
-          <v-btn text >
+          <v-btn text  @click="toRedirect('/')">
             <span>Inicio</span>
           </v-btn>
-          <v-btn text @click="toRedirect('/')">
+          <v-btn text @click="toRedirect('/anime')">
             <span>Animes</span>
           </v-btn>
           <v-btn text>
