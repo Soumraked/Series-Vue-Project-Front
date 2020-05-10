@@ -9,14 +9,13 @@
       <v-img
         class="white--text align-end"
         :src="serie.image"
+        height="350"
       ></v-img>
-
-      <v-card-title>{{serie.name}}</v-card-title>
 
       <v-card-text>
         <div class="my-0 subtitle-1">
-          {{serie.type}}
-          {{serie.year}}
+          <h3 style="color: black;">{{serie.name}}</h3>
+          <p>{{serie.type}} {{serie.year}}</p>
         </div>
       </v-card-text>
     </v-card>
