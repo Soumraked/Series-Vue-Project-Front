@@ -16,6 +16,9 @@
             <v-btn text @click="toRedirect('/anime')">
               <span>Animes</span>
             </v-btn>
+            <v-btn text @click="toRedirect('/pelicula')">
+              <span>Peliculas</span>
+            </v-btn>
             <v-btn text disabled>
               <span>En emisión</span>
             </v-btn>
@@ -69,7 +72,14 @@
               <v-list-item-icon>
                 <v-icon>mdi-format-list-bulleted</v-icon>
               </v-list-item-icon>
-              <v-list-item-title @click="toRedirect('/anime')">Anime</v-list-item-title>
+              <v-list-item-title @click="toRedirect('/anime')">Animes</v-list-item-title>
+            </v-list-item>
+
+            <v-list-item>
+              <v-list-item-icon>
+                <v-icon>mdi-movie</v-icon>
+              </v-list-item-icon>
+              <v-list-item-title @click="toRedirect('/pelicula')">Películas</v-list-item-title>
             </v-list-item>
 
             <v-list-item disabled>

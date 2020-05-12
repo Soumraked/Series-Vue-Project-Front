@@ -31,6 +31,17 @@
               <v-col class="px-5 py-0">
                 <p>Estado: {{data.status}}</p>
               </v-col>
+
+              <v-col align="center">
+                <v-chip
+                  class="ma-2"
+                  color="indigo darken-3"
+                  outlined
+                  v-for="item2 in data.genres" :key="item2.id"
+                >
+                  {{item2}}
+                </v-chip>
+              </v-col>
             </v-row>
           </v-col>
           <!-- Datos serie (Columna 2) -->
@@ -57,7 +68,7 @@ export default {
     return {
     }
   },
-  created(){
+  created(){  
   },
   methods:{
     

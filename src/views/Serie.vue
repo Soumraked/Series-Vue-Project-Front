@@ -17,8 +17,6 @@
 <script>
 // @ is an alias to /src
 import Card from '@/components/cardSerie.vue'
-import {mapState} from 'vuex';
-import {mapMutations} from 'vuex';
 
 export default {
   name: 'Home',
@@ -31,29 +29,23 @@ export default {
     }
   },
   created(){
-    if(!this.save.includes('SerieView')){
-      this.getData();
-      this.setSave('SerieView');
-      console.log('Guardando datos');
-    }else{
-      console.log('Cargando datos');
-      this.seriesData = this.seriesDataVuex;
-    }
+    this.getData();
   },
   methods:{
-    ...mapMutations(['setSave','setSeriesData']),
     async getData(){
       try {
         let data = await this.axios.get('/getApi/getSerie');
-        this.seriesData = data.data;
-        this.setSeriesData(data.data);
+        let auxData = [];
+        for(let i in data.data){
+          if(data.data[i].type == 'Anime'){
+            auxData.push(data.data[i])
+          }
+        }
+        this.seriesData = auxData;
       } catch (error) {
         console.log(error);
       }
     },
   },
-  computed:{
-    ...mapState(['save','seriesDataVuex']),
-  }
 }
 </script>

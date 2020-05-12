@@ -16,6 +16,11 @@ Vue.use(VueRouter)
     component: Serie
   },
   {
+    path: '/pelicula',
+    name: 'Movie',
+    component: () => import('../views/Pelicula.vue')
+  },
+  {
     path: '/serie/:id',
     name: 'SerieDetails',
     component: () => import('../views/SerieDetails.vue')
