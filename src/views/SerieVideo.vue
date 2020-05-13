@@ -2,6 +2,47 @@
   <div>
     <v-container v-if="exist">
       <h2 class="pa-0 ma-0 pt-12">{{name}}</h2>
+      
+      <v-row justify="center">
+        <v-dialog v-model="dialog" scrollable max-width="400px">
+          <template v-slot:activator="{ on }">
+            
+            <v-btn color="indigo darken-3" outlined v-on="on" @click="sendReport = false, dialogm1 = ''"><v-icon>mdi-flag-variant</v-icon></v-btn>
+          </template>
+          <v-card v-if="!sendReport">
+            <v-card-title>Reportar capítulo</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text style="height: 270px;">
+              <v-radio-group v-model="dialogm1"  > 
+                <v-radio
+                  v-for="(item,i) in reportList"
+                  :key="i"
+                  :label="item"
+                  :value="i"
+                ></v-radio>
+              </v-radio-group>
+              <v-text-field autocomplete="off" class="pa-0 ma-0 pt-0" v-if="dialogm1 == '5'" label="Introduce tu observación" v-model="dialogReport" required></v-text-field>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-btn color="blue darken-1" text @click="dialog = false">Cerrar</v-btn>
+              <v-btn color="blue darken-1" text @click="report">Enviar</v-btn>
+            </v-card-actions>
+          </v-card>
+          <v-card v-if="sendReport">
+            <v-card-title>Reportar capítulo</v-card-title>
+            <v-divider></v-divider>
+            <v-card-text style="height: 55px;">
+              <h3 class="pa-0 ma-0 pt-3">Su reporte a sido ingresado con éxito</h3>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+              <v-btn color="blue darken-1" text @click="dialog = false">Ok</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+      
       <v-img 
         src='https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media' 
         @click="switchHandle" 
@@ -30,7 +71,7 @@
 
     <div class="text-center">
 
-      <v-snackbar
+      <!-- <v-snackbar
         v-model="snackbar"
         :timeout="5000"
       >
@@ -42,7 +83,7 @@
         >
           Cerrar
         </v-btn>
-      </v-snackbar>
+      </v-snackbar> -->
     </div>
   </div>
 </template>
@@ -57,6 +98,10 @@ export default {
   },
   data(){
     return{
+      sendReport: false,
+      dialogReport: '',
+      dialogm1: '',
+      dialog: false,
       snackbar: true,
       name: '',
       styleVideo: 'display: none;',
@@ -73,6 +118,13 @@ export default {
       },
       charge: false,
       changeVideo: true,
+      reportList: {
+        1: 'No se reproduce el video.',
+        2: 'Problemas con los subtitulos.',
+        3: 'El reproductor presenta algún error.',
+        4: 'No se presenta información en la página.',
+        5: 'Otro:'
+      }
     }
   },
   created(){
@@ -80,6 +132,20 @@ export default {
     this.getChapters();
   },
   methods:{
+    async report(){
+      let message = '';
+      if(this.dialogm1 == '5'){
+        message = this.dialogReport;
+      }else{
+        message = this.reportList[this.dialogm1];
+      }
+      this.sendReport = true;
+      let report = await this.axios.post('/report/create',{
+        "id": `${this.$route.params.id}`,
+        "number": `${this.$route.params.number}`,
+        "message": message
+      });
+    },
     switchHandle() {
       this.changeVideo = false;
       this.styleVideo='display: block;'
