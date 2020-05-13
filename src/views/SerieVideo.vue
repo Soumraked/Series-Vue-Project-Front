@@ -1,20 +1,9 @@
 <template>
   <div>
     <v-container v-if="exist">
-      <h2 class="pa-0 ma-0 pt-12">{{name}}</h2>
-      <v-img 
-        src='https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media' 
-        @click="switchHandle" 
-        class="videoBox"
-        v-if="changeVideo"
-      ></v-img>
+      
+      <VideoPlayer v-if="chargeInfo && chargeChapter" :name="name" :options="options"/>
 
-      <d-player 
-        :style="styleVideo"
-        :options="options"
-        ref="player">
-      </d-player>
-      <!-- Inicio chips -->
       <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(1)" :disabled="disabledLeft">
         <v-icon left>mdi-arrow-left-thick</v-icon> Anterior
       </v-chip>
@@ -52,13 +41,12 @@
 </template>
 
 <script>
-import VueDPlayer from 'vue-dplayer'
-import 'vue-dplayer/dist/vue-dplayer.css'
+import VideoPlayer from '../components/videoPlayer';
 
 export default {
   name: 'SerieVideo',
   components: {
-    'd-player': VueDPlayer
+    VideoPlayer
   },
   data(){
     return{
@@ -69,33 +57,27 @@ export default {
       disabledRight: false,
       nextChapter: '',
       previousChapter: '',
-      url: '',
       exist: true,
       options: {
         video: {
           url: ''
         },
-        autoplay: true
       },
-      player: null,
-      changeVideo: true,
+      chargeInfo: false,
+      chargeChapter: false,
     }
   },
   created(){
-    this.player = null;
     this.getChapters();
     this.getInfo();
-  },
-  mounted() {
-    this.player = this.$refs.player.dp;
   },
   methods:{
     async getInfo(){
       try {
-        this.changeVideo = true; //Solución??? Video siguiente no carga
         let data = await this.axios.get(`/chapter/get/${this.$route.params.id}/${this.$route.params.number}`);
         this.data = data.data;
-        this.url = data.data.link;
+        this.options.video.url = data.data.link;
+        this.chargeInfo = true;
       } catch (error) {
         this.exist = false;
         console.log(error);
@@ -106,7 +88,7 @@ export default {
         let data2 = await this.axios.get(`/chapter/get/${this.$route.params.id}`);
         let data3 = data2.data.data;
         let current = data3.indexOf(`${this.$route.params.number}`);
-        this.name = data2.data.name + ' ' +data3[current];
+        this.name = data2.data.name + ' ' + data3[current];
         if(data3[current+1]){
           this.nextChapter = data3[current+1];
         }else{
@@ -118,20 +100,11 @@ export default {
         }else{
           this.disabledLeft = true;
         }
+        this.chargeChapter = true;
       }catch{
         this.exist = false;
         console.log(error);
       }
-    },
-    switchHandle() {
-      this.player.switchVideo({
-        url: this.url
-      });
-      this.changeVideo = false;
-      this.styleVideo = 'display: block;'
-      setTimeout(() => {
-        this.player.play()
-      }, 500)
     },
     toEpisode(option){
       switch (option){
@@ -150,61 +123,6 @@ export default {
           console.log('Error desconocido.');
       }
     },
-    play(){
-      console.log('En play');
-    }
   },  
 }
 </script>
-
-<style>
-  .videoBox {
-    width: 800px;
-    margin: 50px auto;
-  }
-  body {
-    margin: 0;
-    padding: 0;
-    text-align: center;
-  }
-  a {
-    color: #42b983;
-    text-decoration: none;
-  }
-  .dplayer {
-    width: 800px;
-    margin: 50px auto;
-  }
-  h1 {
-    font-size: 54px;
-    color: #42b983;
-    margin: 30px 0 10px;
-  }
-  h2 {
-    font-size: 22px;
-    color: #555;
-  }
-  @media (max-width: 768px) {
-    .dplayer {
-      width: 90%;
-    }
-    h1 {
-      font-size: 30px;
-    }
-    h2 {
-      font-size: 16px;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .videoBox {
-      width: 90%;
-    }
-    h1 {
-      font-size: 30px;
-    }
-    h2 {
-      font-size: 16px;
-    }
-  }
-</style>
