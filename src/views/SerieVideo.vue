@@ -1,8 +1,15 @@
 <template>
   <div>
     <v-container v-if="exist">
+      <h2 class="pa-0 ma-0 pt-12">{{name}}</h2>
+      <v-img 
+        src='https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media' 
+        @click="switchHandle" 
+        class="videoBox"
+        v-if="changeVideo"
+      ></v-img>
       
-      <VideoPlayer v-if="chargeInfo && chargeChapter" :name="name" :options="options"/>
+      <VideoPlayer v-if="charge && !changeVideo" :options="options" :styleVideo="styleVideo"/>
 
       <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(1)" :disabled="disabledLeft">
         <v-icon left>mdi-arrow-left-thick</v-icon> Anterior
@@ -62,22 +69,28 @@ export default {
         video: {
           url: ''
         },
+        autoplay: true
       },
-      chargeInfo: false,
-      chargeChapter: false,
+      charge: false,
+      changeVideo: true,
     }
   },
   created(){
-    this.getChapters();
     this.getInfo();
+    this.getChapters();
   },
   methods:{
+    switchHandle() {
+      this.changeVideo = false;
+      this.styleVideo='display: block;'
+    },
     async getInfo(){
       try {
         let data = await this.axios.get(`/chapter/get/${this.$route.params.id}/${this.$route.params.number}`);
         this.data = data.data;
         this.options.video.url = data.data.link;
-        this.chargeInfo = true;
+        this.name = data.data.name + ' ' + this.$route.params.number;
+        this.charge = true;
       } catch (error) {
         this.exist = false;
         console.log(error);
@@ -88,7 +101,6 @@ export default {
         let data2 = await this.axios.get(`/chapter/get/${this.$route.params.id}`);
         let data3 = data2.data.data;
         let current = data3.indexOf(`${this.$route.params.number}`);
-        this.name = data2.data.name + ' ' + data3[current];
         if(data3[current+1]){
           this.nextChapter = data3[current+1];
         }else{
@@ -100,7 +112,6 @@ export default {
         }else{
           this.disabledLeft = true;
         }
-        this.chargeChapter = true;
       }catch{
         this.exist = false;
         console.log(error);
@@ -126,3 +137,40 @@ export default {
   },  
 }
 </script>
+
+<style>
+  .videoBox {
+    width: 800px;
+    margin: 50px auto;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  a {
+    color: #42b983;
+    text-decoration: none;
+  }
+  h1 {
+    font-size: 54px;
+    color: #42b983;
+    margin: 30px 0 10px;
+  }
+  h2 {
+    font-size: 22px;
+    color: #555;
+  }
+
+  @media (max-width: 768px) {
+    .videoBox {
+      width: 90%;
+    }
+    h1 {
+      font-size: 30px;
+    }
+    h2 {
+      font-size: 16px;
+    }
+  }
+</style>
