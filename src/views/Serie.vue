@@ -1,17 +1,35 @@
 <template>
-  <v-container>
-    <v-card
-      class="d-flex flex-wrap justify-space-around"
-      flat
-      tile
-      min-height="200"
-    >
-      <div v-for="item in seriesData" :key="item.id">
-        <Card :serie="item"/>
-      </div>
-    </v-card>
-    
-  </v-container>
+  <div>
+    <v-container v-if="!load">
+      <v-sheet
+        class="d-flex flex-wrap justify-space-around"
+      >
+        <v-skeleton-loader
+          class="my-2 px-2 py-1"
+          width="250"
+          height="400"
+          type="image, image"
+          loading
+          v-for="n in 20"
+          :key="n"
+        ></v-skeleton-loader>
+      </v-sheet>
+    </v-container>
+    <v-container v-if="load">
+      <v-card
+        class="d-flex flex-wrap justify-space-around"
+        flat
+        tile
+        min-height="200"
+      >
+        <v-layout :wrap='true'>
+          <v-flex md3 v-for="item in seriesData" :key="item.id">
+            <Card :serie="item"/>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -26,10 +44,14 @@ export default {
   data(){
     return{
       seriesData: [],
+      load: false
     }
   },
   created(){
     this.getData();
+  },
+  mounted(){
+    setTimeout(() => (this.load = true), 1000);
   },
   methods:{
     async getData(){

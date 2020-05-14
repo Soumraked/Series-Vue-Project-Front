@@ -1,17 +1,34 @@
 <template>
-  <v-container>
-    <v-card
-      class="d-flex flex-wrap justify-space-around"
-      flat
-      tile
-      min-height="200"
-    >
-      <div v-for="item in seriesData" :key="item.id">
-        <Card :serie="item.data"/>
-      </div>
-    </v-card>
-    
-  </v-container>
+  <div>
+    <v-container v-if="skeletonLoader">
+      <v-sheet
+        class="d-flex flex-wrap justify-space-around"
+      >
+        <v-skeleton-loader
+          class="mx-auto"
+          width="275"
+          type="card"
+          loading
+          v-for="n in 24"
+          :key="n"
+        ></v-skeleton-loader>
+      </v-sheet>
+    </v-container>
+    <v-container v-if="!skeletonLoader">
+      <v-card
+        class="d-flex flex-wrap justify-space-around"
+        flat
+        tile
+        height="200"
+      > 
+        <v-layout :wrap='true'>
+          <v-flex md3 v-for="item in seriesData" :key="item.id">
+            <Card :serie="item.data"/>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -26,10 +43,14 @@ export default {
   data(){
     return{
       seriesData: [],
+      skeletonLoader: true,
     }
   },
   created(){
     this.getData();
+  },
+  mounted(){
+    setTimeout(() => (this.swap()), 1000);
   },
   methods:{
     async getData(){
@@ -39,6 +60,14 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    swap(){
+      this.skeletonLoader = false;
+    },
+    reserve () {
+      this.loading = true
+
+      setTimeout(() => (this.loading = false), 1000)
     },
   },
 }

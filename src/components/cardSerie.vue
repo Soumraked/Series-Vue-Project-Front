@@ -1,10 +1,10 @@
 <template>
   <div>
-  <v-card
-      :loading="loading"
+    <v-card
       class="my-2 px-2 py-1"
       max-width="250"
       @click="redirectTo(serie.id)"
+      :loading="loading"
     >
       <v-img
         class="white--text align-end"
@@ -42,7 +42,7 @@ export default {
     reserve () {
       this.loading = true
 
-      setTimeout(() => (this.loading = false), 2000)
+      setTimeout(() => (this.loading = false), 1000)
     },
   }
 }

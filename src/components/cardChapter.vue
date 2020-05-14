@@ -1,12 +1,13 @@
 <template>
   <div>
   <v-card
-      :loading="loading"
       class="my-2 pa-2"
-      max-width="275"
+      width="275"
       @click="redirectTo(serie.serie, serie.number)"
+      :loading="loading"
     >
       <v-img
+        height="175" 
         class="white--text align-end"
         :src="serie.image"
       ></v-img>
@@ -26,8 +27,8 @@ export default {
   name: 'LastChapters',
   data(){
     return{
-      loading: false,
       selection: 1,
+      loading: false,
     }
   },
   created(){
@@ -40,8 +41,8 @@ export default {
     reserve () {
       this.loading = true
 
-      setTimeout(() => (this.loading = false), 2000)
+      setTimeout(() => (this.loading = false), 1000)
     },
-  }
+  },
 }
 </script>
