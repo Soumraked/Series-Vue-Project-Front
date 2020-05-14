@@ -8,7 +8,7 @@
         min-height="200"
       >
         <v-layout :wrap='true'>
-          <v-flex md3 v-for="item in seriesData" :key="item.id">
+          <v-flex md3 v-for="item in seriesData" :key="item.id" class="d-flex flex-wrap justify-space-around">
             <Card :serie="item"/>
           </v-flex>
         </v-layout>
