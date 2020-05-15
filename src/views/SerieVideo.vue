@@ -86,7 +86,7 @@
       </v-snackbar> -->
     </div>
     <v-container :style="styleDisqus">
-      <Disqus :page_id="this.$route.params.id + '/' + this.$route.params.number" />
+      <Disqus :id="this.$route.params.id" :number="this.$route.params.number"/>
     </v-container>
   </div>
 </template>
