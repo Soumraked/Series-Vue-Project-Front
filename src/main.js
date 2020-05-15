@@ -6,6 +6,10 @@ import vuetify from './plugins/vuetify';
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+
+import VueDisqus from 'vue-disqus'
+ 
+Vue.use(VueDisqus)
  
 Vue.use(VueAxios, axios)
 

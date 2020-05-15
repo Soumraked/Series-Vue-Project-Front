@@ -85,16 +85,21 @@
         </v-btn>
       </v-snackbar> -->
     </div>
+    <v-container :style="styleDisqus">
+      <Disqus :page_id="this.$route.params.id + '/' + this.$route.params.number" />
+    </v-container>
   </div>
 </template>
 
 <script>
 import VideoPlayer from '../components/videoPlayer';
+import Disqus from '@/components/Disqus.vue';
 
 export default {
   name: 'SerieVideo',
   components: {
-    VideoPlayer
+    VideoPlayer,
+    Disqus
   },
   data(){
     return{
