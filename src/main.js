@@ -9,6 +9,11 @@ import VueAxios from 'vue-axios'
 
 import VueDisqus from 'vue-disqus'
  
+Vue.directive('title', {
+  inserted: (el, binding) => document.title = binding.value,
+  update: (el, binding) => document.title = binding.value
+})
+
 Vue.use(VueDisqus)
  
 Vue.use(VueAxios, axios)

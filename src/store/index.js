@@ -5,22 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    save: [],
-    seriesDataVuex: [],
-    serieDataVuex: {}
+    title: 'Monos Otakos'
   },
   mutations: {
-    setSave(state, option){
-      state.save.push(option);
-    },
-    setSeriesData(state, data){
-      state.seriesDataVuex = data;
-    },
-    setSerieData(state, data){
-      console.log(data)
-      (state.serieDataVuex)[data.id] = data;
-      
-    }
   },
   actions: {
   },

@@ -53,6 +53,7 @@ export default {
   },
   created(){
     this.getData();
+    this.$store.state.title = 'Monos Otakos';
   },
   mounted(){
     setTimeout(() => (this.swap()), 2000);

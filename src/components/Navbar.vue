@@ -120,6 +120,7 @@ export default {
     toRedirect(route){
       if(this.$router.history.current.fullPath != route){
         this.$router.push(route);
+        this.$emit('update:title', route)
       }
     },
   }

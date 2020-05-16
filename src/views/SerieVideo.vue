@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container v-if="exist">
+    <v-container v-if="exist && charge">
       <h2 class="pa-0 ma-0 pt-12">{{name}}</h2>
       
       <v-row justify="center">
@@ -85,7 +85,7 @@
         </v-btn>
       </v-snackbar> -->
     </div>
-    <v-container :style="styleDisqus">
+    <v-container>
       <Disqus :id="this.$route.params.id" :number="this.$route.params.number"/>
     </v-container>
   </div>
@@ -103,6 +103,7 @@ export default {
   },
   data(){
     return{
+      charge: false,
       sendReport: false,
       dialogReport: '',
       dialogm1: '',
@@ -136,6 +137,9 @@ export default {
     this.getInfo();
     this.getChapters();
   },
+  mounted(){
+    this.charge = true;
+  },
   methods:{
     async report(){
       let message = '';
@@ -162,6 +166,7 @@ export default {
         this.options.video.url = data.data.link;
         this.name = data.data.name + ' ' + this.$route.params.number;
         this.charge = true;
+        this.$store.state.title = data.data.name + ' - ' + this.$route.params.number;
       } catch (error) {
         this.exist = false;
         console.log(error);

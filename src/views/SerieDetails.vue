@@ -39,6 +39,7 @@ export default {
     //   this.data = this.serieDataVuex.id;
     // }
     this.getInfo();
+    
   },
   methods:{
     // ...mapMutations(['setSave','setSerieData']),
@@ -49,6 +50,7 @@ export default {
         if(data.data.chapter.length == 0){
           this.eps = false;
         }
+        this.$store.state.title = data.data.name;
         // let dataAux = data.data;
         // dataAux.id = this.$route.params.id.toString();
         // this.setSerieData(dataAux);

@@ -48,6 +48,8 @@ export default {
     }
   },
   created(){
+    this.$store.state.title = 'Anime';
+    console.log(this.$store.state.title)
     this.getData();
   },
   mounted(){

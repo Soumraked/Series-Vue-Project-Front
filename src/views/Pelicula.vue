@@ -49,6 +49,7 @@ export default {
     }
   },
   created(){
+    this.$store.state.title = 'Peliculas';
     this.getData();
   },
   mounted(){

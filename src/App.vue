@@ -4,7 +4,7 @@
       <Navbar/>
 
       <v-content>
-        <router-view/>
+        <router-view v-title="$store.state.title"/>
       </v-content>
       
     </v-container>
@@ -20,9 +20,10 @@ export default {
     Navbar,
   },
 
-  data: () => ({
-    //
-  }),
+  data(){
+    return{
+    }
+  },
   methods:{
     toRedirect(){
       if(this.$router.history.current.fullPath != '/'){

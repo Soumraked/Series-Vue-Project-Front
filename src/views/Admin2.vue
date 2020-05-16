@@ -113,6 +113,7 @@
     }),
     created(){
       this.getId();
+      this.$store.state.title = 'Admin - Capítulos';
     },
     methods: {
       async getId(){
