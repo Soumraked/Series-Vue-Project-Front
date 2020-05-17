@@ -52,7 +52,7 @@
           <v-list-item @click="dialogSignIn = true">
             <v-list-item-title>Sign In</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="dialog = true">
+          <v-list-item @click="dialog = true" disabled>
             <v-list-item-title>Sign Up</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -60,7 +60,7 @@
           <v-list-item @click="toRedirect('/admin')" v-if="this.$session.id() == 'sess:admin'">
             <v-list-item-title>Admin</v-list-item-title>
           </v-list-item>
-          <v-list-item>
+          <v-list-item disabled>
             <v-list-item-title>Profile</v-list-item-title>
           </v-list-item>
           <v-list-item @click="signout()">
