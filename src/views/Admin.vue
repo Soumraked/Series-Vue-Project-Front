@@ -281,7 +281,7 @@
     }),
     created(){
       this.getItems();
-      this.$store.state.title = 'Admin - Series'
+      this.$store.state.title = 'Admin - Series';
     },
     methods: {
       async getItems(){

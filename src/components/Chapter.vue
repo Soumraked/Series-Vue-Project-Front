@@ -15,8 +15,12 @@
             :key="item.id"
             @click="toChapter(item.number)"
           >
-            <v-list-item-content>
+            <v-list-item-content v-if="subtitles != 'Sin subtitulos'">
               <v-list-item-title v-text="name + ' ' + item.number + ' sub ' + subtitles"></v-list-item-title>
+            </v-list-item-content>
+
+            <v-list-item-content v-if="subtitles == 'Sin subtitulos'">
+              <v-list-item-title v-text="name + ' ' + item.number"></v-list-item-title>
             </v-list-item-content>
 
           </v-list-item>

@@ -39,7 +39,17 @@ Vue.use(VueRouter)
     path: '/admin2',
     name: 'Admin2',
     component: () => import('../views/Admin2.vue')
-  }
+  },
+  {
+    path: '/admin3',
+    name: 'Admin3',
+    component: () => import('../views/Admin3.vue')
+  },
+  {
+    path: '/admin134',
+    name: 'Admin4',
+    component: () => import('../views/Admin4.vue')
+  },
 ]
 
 const router = new VueRouter({
