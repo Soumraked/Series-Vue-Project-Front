@@ -1,364 +1,42 @@
 <template>
   <div>
-    <div v-if="login">
-      <v-container>
-        <v-form
-          ref="form"
-          v-model="valid"
-          lazy-validation
-        >
-          <v-text-field
-            autocomplete="off"
-            v-model="name"
-            :rules="nameRules"
-            label="Nombre"
-            required
-          ></v-text-field>
-
-          <v-textarea
-            v-model="description"
-            :rules="descriptionRules"
-            label="Descripción"
-            required
-          ></v-textarea>
-
-          <v-row no-gutters>
-            <v-col cols="12" sm="3" >
-              <v-select class="px-3"
-                v-model="selectLanguage"
-                :items="language"
-                :rules="[v => !!v || 'Language is required']"
-                label="Idioma"
-                required
-              ></v-select>
-            </v-col>
-
-            <v-col cols="12" sm="3" >
-              <v-select class="px-3"
-                v-model="selectSubtitle"
-                :items="subtitle"
-                :rules="[v => !!v || 'Subtitle is required']"
-                label="Subtitulos"
-                required
-              ></v-select>
-            </v-col>
-
-            <v-col cols="12" sm="3" >
-              <v-select class="px-3"
-                v-model="selectType"
-                :items="type"
-                :rules="[v => !!v || 'Type is required']"
-                label="Tipo"
-                required
-              ></v-select>
-            </v-col>
-
-            <v-col cols="12" sm="3" >
-              <v-select class="px-3"
-                v-model="selectFinished"
-                :items="finished"
-                :rules="[v => !!v || 'Input is required']"
-                label="Estado"
-                required
-              ></v-select>
-            </v-col>
-          </v-row>
-
-
-          <v-dialog
-            ref="dialog"
-            v-model="dateModal"
-            :return-value.sync="date"
-            persistent
-            width="290px"
-          >
-            <template v-slot:activator="{ on }">
-              <v-text-field
-                v-model="date"
-                label="Fecha de emisión"
-                prepend-icon="mdi-calendar"
-                readonly
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker v-model="date" scrollable>
-              <v-spacer></v-spacer>
-              <v-btn text color="primary" @click="dateModal = false">Cancel</v-btn>
-              <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
-            </v-date-picker>
-          </v-dialog>
-
-          <v-combobox
-            v-model="chips"
-            :items="items"
-            :rules="[v => !!v[0] || 'Genres is required']"
-            chips
-            clearable
-            label="Géneros"
-            multiple
-            prepend-icon="mdi-clipboard-check"
-
-          >
-            <template v-slot:selection="{ attrs, item, select, selected }">
-              <v-chip
-                v-bind="attrs"
-                :input-value="selected"
-                close
-                @click="select"
-                @click:close="remove(item)"
-              >
-                <strong>{{ item }}</strong>&nbsp;
-              </v-chip>
-            </template>
-          </v-combobox>
-
+    <v-container class="px-0" fluid v-if="this.$session.id() == 'sess:admin'">
+      <v-radio-group v-model="radioGroup" >
+        <v-flex :wrap="true" class="d-flex flex-wrap justify-space-around">
+          <v-radio
           
-          <v-row no-gutters>
-            <v-col cols="12" sm="4" >
-              <v-file-input class="px-3"
-                :rules="[v => !!v.name || 'Chapter image is required']"
-                v-model="chapterInput"
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Pick an Chapter Image"
-                prepend-icon="mdi-camera"
-                label="Chapter"
-              ></v-file-input>
-            </v-col>
-
-            
-            <v-col cols="12" sm="4" >
-              <v-file-input class="px-3"
-                :rules="[v => !!v.name || 'Cover image is required']"
-                v-model="coverInput"
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Pick an Cover Image"
-                prepend-icon="mdi-camera"
-                label="Cover"
-              ></v-file-input>
-            </v-col>
-
-            <v-col cols="12" sm="4" >
-              <v-file-input class="px-3"
-                :rules="[v => !!v.name || 'Thumbnail image is required']"
-                v-model="thumbnailInput"
-                accept="image/png, image/jpeg, image/bmp"
-                placeholder="Pick an Thumbnail Image"
-                prepend-icon="mdi-camera"
-                label="Thumbnail"
-              ></v-file-input>
-            </v-col>
-          </v-row>
-
-          <v-checkbox
-            v-model="checkbox"
-            :rules="[v => !!v || 'You must agree to continue!']"
-            label="Do you agree?"
-            required
-          ></v-checkbox>
-        </v-form>
-
-        <div>
-          <v-row justify="center">
-            <v-dialog v-model="dialog" width="600px">
-              <template v-slot:activator="{ dialog }">
-                <v-btn
-                  v-on="dialog"
-                  :disabled="!valid"
-                  color="success"
-                  class="mr-4"
-                  @click="validate"
-                  :loading="loadingbtn"
-                >
-                  Complete
-                </v-btn>
-
-                <v-btn
-                  color="error"
-                  class="mr-4"
-                  @click="reset"
-                >
-                  Reset Form
-                </v-btn>
-              </template>
-              <v-card>
-                <v-card-title>
-                  <span class="headline">Carga de archivos</span>
-                </v-card-title>
-                <v-card-text>{{mensaje}}</v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text :loading="loadingbtn" @click="dialog = false">Ok</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-row>
-        </div>
-      </v-container>
-    </div>
-    <div v-if="!login">
-      <v-row align="center" justify="space-around">
-
-        <v-form
-          ref="form"
-        >
-          <v-text-field
-            v-model="nameAdmin"
-            autocomplete="off"
-            :counter="10"
-            label="Name"
-            required
-          ></v-text-field>
-
-          <v-text-field
-            v-model="passwordAdmin"
-            type="password"
-            label="Password"
-            required
-          ></v-text-field>
-
-          <v-btn
-            :disabled="!validAdmin"
-            color="success"
-            class="mr-4"
-            @click="enter"
-          >
-            Validate
-          </v-btn>
-        </v-form>
-      </v-row>
-    </div>
+            v-for="(item, index) in option"
+            :key="index"
+            :label="item"
+            :value="index+1"
+          ></v-radio>
+        </v-flex>
+      </v-radio-group>
+      <Admin1 v-if="radioGroup == 1"/>
+      <Admin2 v-if="radioGroup == 2"/>
+      <Admin3 v-if="radioGroup == 3"/>
+    </v-container>
+    <v-container v-if="this.$session.id() != 'sess:admin'">
+      No cuentas con los permisos necesarios para ingresar a este apartado.
+    </v-container>
   </div>
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      validAdmin: true,
-      nameAdmin: '',
-      passwordAdmin: '',
-      login: false,
-      loadingbtn: false,
-      dialog: false,
-      mensaje: '',
-      coverInput: [],
-      chapterInput: [],
-      thumbnailInput: [],
-      chips: [],
-      items: [],
-      date: new Date().toISOString().substr(0, 10),
-      dateModal: false,
-      valid: true,
-      name: '',
-      nameRules: [
-        v => !!v || 'Name is required',
-      ],
-      description: '',
-      descriptionRules: [
-        v => !!v || 'Description is required',
-      ],
-      selectLanguage: 'Japones',
-      language: [
-        'Español',
-        'Japones'
-      ],
-      selectSubtitle: 'Español',
-      subtitle: [
-        'Español',
-        'Japones'
-      ],
-      selectType: null,
-      type: [
-        'Anime',
-        'Película',
-        'Ova'
-      ],
-      selectFinished: null,
-      finished: [
-        'Finalizado',
-        'En emisión'
-      ],
-      checkbox: false,
-    }),
-    created(){
-      this.getItems();
-      this.$store.state.title = 'Admin - Series';
-    },
-    methods: {
-      async getItems(){
-        let data = await this.axios.get('/getApi/getGenres');
-        this.items = data.data;
-      },
-      async validate () {
-        if(this.$refs.form.validate()){
-          this.loadingbtn = true;
-          let carpeta = (this.name.toString().toLowerCase()).replace(/\s+/g, '');
-          let data = await this.axios.get(`/serie/exist/${carpeta}`);
-          if(data.data.data){
-            this.mensaje = 'Ya existe serie a ingresar.'
-            this.dialog = true;
-            this.loadingbtn = false;
-            console.log('No continuar')
-          }else{
-            this.mensaje = 'Subiendo datos, espere por favor.'
-            this.dialog = true;
-            this.send();
-          }          
-        }
-      },
-      reset () {
-        this.$refs.form.reset()
-      },
-      remove (item) {
-        this.chips.splice(this.chips.indexOf(item), 1)
-        this.chips = [...this.chips]
-      },
-      async send(){
-        try {
-          let carpeta = (this.name.toString().toLowerCase()).replace(/\s+/g, '');
-
-          const cover = new FormData();
-          cover.append('image',this.coverInput, this.coverInput.name);
-          const chapter = new FormData();
-          chapter.append('image',this.chapterInput, this.chapterInput.name);
-          const thumbnail = new FormData();
-          thumbnail.append('image',this.thumbnailInput, this.thumbnailInput.name);
-
-          let coverPost = await this.axios.post(`/image/upload/${carpeta}/cover`, cover);
-          let chapterPost = await this.axios.post(`/image/upload/${carpeta}/chapter`, chapter);
-          let thumbnailPost = await this.axios.post(`/image/upload/${carpeta}/thumbnail`, thumbnail);
-
-          let coverUrl = coverPost.data.url;
-          let chapterUrl = chapterPost.data.url;
-          let thumbnailUrl = thumbnailPost.data.url;
-
-          let finishedBool = this.selectFinished == 'Finalizado';
-
-          let seriePost = await this.axios.post(`/serie/create`, {
-            'name': this.name,
-            'language': this.selectLanguage,
-            'subtitles': this.selectSubtitle,
-            'dateOrigin': this.date.toString(),
-            'description': this.description,
-            'finished': finishedBool.toString(),
-            'coverImage': coverUrl,
-            'thumbnailImage':  thumbnailUrl,
-            'chapterImage':  chapterUrl,
-            'genres': this.chips,
-            'type': this.selectType
-          });
-
-          console.log(seriePost)
-          this.loadingbtn = false;
-          this.mensaje = 'Acción completada con éxito.';
-        } catch (error) {
-          console.log(error.code);
-        }
-      },
-      enter(){
-        if(this.nameAdmin == 'admin' && this.passwordAdmin == '134'){
-          this.login = true;
-        }
-      }
-    },
-  }
+import Admin1 from '@/components/Admin1.vue'
+import Admin2 from '@/components/Admin2.vue'
+import Admin3 from '@/components/Admin3.vue'
+export default {
+  components: {
+    Admin1,
+    Admin2,
+    Admin3,
+  },
+  data () {
+    return {
+      radioGroup: 3,
+      option: ['Ingreso sólo de Series', 'Ingreso sólo de capítulos', 'Ingreso de series y capítulos']
+    }
+  },
+}
 </script>

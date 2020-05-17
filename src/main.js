@@ -8,6 +8,10 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 
 import VueDisqus from 'vue-disqus'
+
+import VueSession from 'vue-session'
+
+Vue.use(VueSession)
  
 Vue.directive('title', {
   inserted: (el, binding) => document.title = binding.value,
