@@ -41,22 +41,23 @@
         <v-menu offset-y>
         <template v-slot:activator="{ on }">
           <v-btn 
-            icon 
-            color="primary"
-            dark
+            icon
             v-on="on">
-            <v-icon>mdi-account-circle</v-icon>
+            <v-icon>mdi-account</v-icon>
           </v-btn>
         </template>
         <v-list v-if="!this.$session.exists()">
-          <v-list-item @click="dialogSignIn = true">
+          <v-list-item @click="signIn()">
             <v-list-item-title>Sign In</v-list-item-title>
           </v-list-item>
-          <v-list-item @click="dialog = true" disabled>
+          <v-list-item @click="signUp()">
             <v-list-item-title>Sign Up</v-list-item-title>
           </v-list-item>
         </v-list>
         <v-list v-if="this.$session.exists()">
+          <v-list-item>
+            <v-list-item-title>{{this.$session.get('nickname')}}</v-list-item-title>
+          </v-list-item>
           <v-list-item @click="toRedirect('/admin')" v-if="this.$session.id() == 'sess:admin'">
             <v-list-item-title>Admin</v-list-item-title>
           </v-list-item>
@@ -90,6 +91,7 @@
                 <v-text-field
                   label="Nickname"
                   type="text"
+                  autocomplete="off"
                   v-model="nicknameUser"
                 ></v-text-field>
                 <v-text-field
@@ -98,7 +100,7 @@
                   v-model="passwordUser"
                 ></v-text-field>
                 <span class="caption grey--text text--darken-1">
-                  Please enter a nickname and password for your account
+                  {{mesajeAccount}}
                 </span>
               </v-card-text>
             </v-window-item>
@@ -153,7 +155,7 @@
                   v-model="nickName"
                 ></v-text-field>
                 <span class="caption grey--text text--darken-1">
-                  This is the Nickname you will use to login to your Monos Otakos account
+                  {{mesajeAccount}}
                 </span>
               </v-card-text>
             </v-window-item>
@@ -172,7 +174,7 @@
                   v-model="passwordConfirm"
                 ></v-text-field>
                 <span class="caption grey--text text--darken-1">
-                  Please enter a password for your account
+                  {{mesajeAccount}}
                 </span>
               </v-card-text>
             </v-window-item>
@@ -183,7 +185,7 @@
                   class="mb-4"
                   contain
                   height="128"
-                  src="https://cdn.vuetifyjs.com/images/logos/v.svg"
+                  src="https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/nekoAvatar.jpg?alt=media"
                 ></v-img>
                 <h3 class="title font-weight-light mb-2">Welcome to Monos Otakos</h3>
                 <span class="caption grey--text">Thanks for signing up!</span>
@@ -195,11 +197,19 @@
 
           <v-card-actions>
             <v-btn
-              :disabled="step === 1"
+              :disabled="step === 1 || step === 3"
               text
               @click="stepOption('-')"
             >
               Back
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn
+              v-if="step === 3"
+              text
+              @click="dialog = false"
+            >
+              Continuar
             </v-btn>
             <v-spacer></v-spacer>
             <v-btn
@@ -303,6 +313,8 @@ export default {
       dialogSignIn: false,
       nicknameUser: '',
       passwordUser: '',
+      users: [],
+      mesajeAccount: ''
     }
   },
   computed: {
@@ -315,17 +327,15 @@ export default {
     },
   },
   created(){
-    // if(!this.$session.exists()){
-    //   this.$session.start();
-    // }else{
-    //   console.log(this.$session.get('session-id'));
-    // }
-    //this.$session.destroy();
-    //this.$session.start();
-    //this.$session.renew('admin')
     console.log(this.$session.id());
+    console.log(this.$session.get('nickname'));
+    this.getUsers();
   },
   methods:{
+    async getUsers(){
+      let data = await this.axios.get(`/auth/get`);
+      this.users = data.data;
+    },
     toRedirect(route){
       if(this.$router.history.current.fullPath != route){
         this.$router.push(route);
@@ -335,21 +345,54 @@ export default {
     stepOption(option){
       if(option == '+'){
         if(this.step == 1 && this.nickName != ''){
-          this.step++;
-        }else if(this.step == 2 && this.password != '' && this.passwordConfirm != '' && this.password == this.passwordConfirm){
-          this.step++;
-        }
-        
+          if(this.nickName.length >= 3){
+            if(!this.users.includes(this.nickName.toString().toLowerCase())){
+              this.mesajeAccount = 'Las contraseñas deben tener un mínimo de 6 caracteres..'
+              this.step++;
+            }else{
+              this.mesajeAccount = 'El apodo ya se encuentra utilizado';
+              console.log('El apodo ya se encuentra utilizado');
+            }
+          }else{
+            this.mesajeAccount = 'El apodo debe tener más de 3 caracteres';
+            console.log('El apodo debe tener más de 3 caracteres');
+          }    
+        }else if(this.step == 2 && this.password != '' && this.passwordConfirm != ''){
+          if(this.password == this.passwordConfirm){
+            if(this.password.length >= 6){
+              this.enterUser();
+              this.mesajeAccount = '';
+              this.step++;
+              this.$session.start();
+              this.$session.renew('user');
+              this.$session.set('nickname',this.nickName.toString());
+              location.reload();
+            }else{
+              this.mesajeAccount = 'Las contraseñas deben tener como mínimo 6 caracteres.';
+              console.log('Las contraseñas deben tener como mínimo 6 caracteres.');
+            }
+          }else{
+            this.mesajeAccount = 'Las contraseñas no coinciden.';
+            console.log('Las contraseñas no coinciden.');
+          }
+          
+        }        
       }else if(option == '-'){
+        this.mesajeAccount = '';
         this.step--;
       }
     },
-    enter(){
-      if(this.nicknameUser == 'admin' && this.passwordUser == '134'){
-        this.dialogSignIn = false;
-        this.$session.start();
-        this.$session.renew('admin');
-        location.reload();
+    async enterUser(){
+      try {
+        let data = await this.axios.post('/auth/create',{
+          "nick": this.nickName.toString(),
+          "password": this.password.toString(),
+          "passwordConfirm": this.passwordConfirm.toString(),
+          "position": "user"
+        });
+        console.log('User successfully created.');
+      } catch (error) {
+        console.log(error)
       }
     },
     signout(){
@@ -357,6 +400,39 @@ export default {
       this.passwordUser = '';
       this.$session.destroy();
       location.reload();
+    },
+    signUp(){
+      this.dialog = true;
+      this.mesajeAccount = 'El nombre de usuario debe tener 3 o más caracteres.'
+    },
+    signIn(){
+      this.dialogSignIn = true;
+      this.mesajeAccount = 'Introduzca sus credenciales para continuar.'
+    },
+    async enter(){
+      if(this.nicknameUser == '' || this.passwordUser == ''){
+        this.mesajeAccount = 'Complete los campos antes de continuar.';
+      }else{
+        let data = await this.axios.post('https://us-central1-monosotakos.cloudfunctions.net/api/auth/login',
+        {
+          "nick": this.nicknameUser.toString(),
+	        "password": this.passwordUser.toString()
+        });
+        if(data.data.message == "Wrong password, try again."){
+          this.mesajeAccount = 'Contraseña incorrecta, intente nuevamente.';
+        }else if(data.data.message == "User entered does not exist, try again."){
+          this.mesajeAccount = 'El usuario ingresado no existe, verifique la información e intente nuevamente.';
+        }else if(data.data.message == "Login"){
+          this.mesajeAccount = 'Datos validados.';
+          this.$session.start();
+          this.$session.renew(data.data.position);
+          this.$session.set('nickname', data.data.nickname);
+          this.dialogSignIn = false;
+          location.reload();
+        }else{
+          this.mesajeAccount = 'Error desconocido, intente nuevamente o contáctese con el administrador.';
+        }
+      }
     },
   }
 }
