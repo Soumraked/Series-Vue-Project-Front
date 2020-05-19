@@ -361,12 +361,6 @@ export default {
           if(this.password == this.passwordConfirm){
             if(this.password.length >= 6){
               this.enterUser();
-              this.mesajeAccount = '';
-              this.step++;
-              this.$session.start();
-              this.$session.renew('user');
-              this.$session.set('nickname',this.nickName.toString());
-              location.reload();
             }else{
               this.mesajeAccount = 'Las contraseñas deben tener como mínimo 6 caracteres.';
               console.log('Las contraseñas deben tener como mínimo 6 caracteres.');
@@ -384,12 +378,20 @@ export default {
     },
     async enterUser(){
       try {
+        var Crypto = require('crypto-js');
+        var newPass = Crypto.SHA256(this.password.toString()).toString();
         let data = await this.axios.post('/auth/create',{
           "nick": this.nickName.toString(),
-          "password": this.password.toString(),
-          "passwordConfirm": this.passwordConfirm.toString(),
+          "password": newPass,
+          "passwordConfirm": newPass,
           "position": "user"
         });
+        this.mesajeAccount = '';
+        this.step++;
+        this.$session.start();
+        this.$session.renew('user');
+        this.$session.set('nickname',this.nickName.toString());
+        location.reload();
         console.log('User successfully created.');
       } catch (error) {
         console.log(error)
@@ -413,10 +415,12 @@ export default {
       if(this.nicknameUser == '' || this.passwordUser == ''){
         this.mesajeAccount = 'Complete los campos antes de continuar.';
       }else{
+        var Crypto = require('crypto-js');
+        var newPass = Crypto.SHA256(this.passwordUser.toString()).toString();
         let data = await this.axios.post('https://us-central1-monosotakos.cloudfunctions.net/api/auth/login',
         {
           "nick": this.nicknameUser.toString(),
-	        "password": this.passwordUser.toString()
+	        "password": newPass
         });
         if(data.data.message == "Wrong password, try again."){
           this.mesajeAccount = 'Contraseña incorrecta, intente nuevamente.';

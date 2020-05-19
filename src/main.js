@@ -11,6 +11,10 @@ import VueDisqus from 'vue-disqus'
 
 import VueSession from 'vue-session'
 
+import Crypto from 'crypto-js'
+
+Vue.use(Crypto)
+
 Vue.use(VueSession)
  
 Vue.directive('title', {
