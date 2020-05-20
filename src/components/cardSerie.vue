@@ -4,7 +4,6 @@
       class="my-2 px-2 py-1"
       max-width="250"
       @click="redirectTo(serie.id)"
-      :loading="loading"
     >
       <v-img
         class="white--text align-end"
@@ -28,21 +27,11 @@ export default {
   name: 'SerieDetails',
   data(){
     return{
-      loading: false,
-      selection: 1,
     }
-  },
-  created(){
-    this.reserve();
   },
   methods:{
     redirectTo(url){
       this.$router.push('/serie/'+url);
-    },
-    reserve () {
-      this.loading = true
-
-      setTimeout(() => (this.loading = false), 1000)
     },
   }
 }

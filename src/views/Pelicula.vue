@@ -1,20 +1,6 @@
 <template>
   <div>
-    <v-container v-if="!skeletonLoader">
-      <v-card
-        class="d-flex flex-wrap justify-space-around"
-        flat
-        tile
-        min-height="200"
-      >
-        <v-layout :wrap='true'>
-          <v-flex md3 v-for="item in seriesData" :key="item.id" class="d-flex flex-wrap justify-space-around">
-            <Card :serie="item"/>
-          </v-flex>
-        </v-layout>
-      </v-card>     
-    </v-container>
-    <v-container v-if="skeletonLoader">
+    <v-container fluid :style="skeletonLoader">
       <v-sheet
         class="d-flex flex-wrap justify-space-around"
       >
@@ -28,6 +14,21 @@
           :key="n"
         ></v-skeleton-loader>
       </v-sheet>
+    </v-container>
+
+    <v-container fluid :style="movies">
+      <v-card
+        class="d-flex flex-wrap justify-space-around"
+        flat
+        tile
+        min-height="200"
+      >
+        <v-layout :wrap='true'>
+          <v-flex md3 v-for="item in seriesData" :key="item.id" class="d-flex flex-wrap justify-space-around">
+            <Card :serie="item"/>
+          </v-flex>
+        </v-layout>
+      </v-card>     
     </v-container>
     
   </div>
@@ -45,7 +46,8 @@ export default {
   data(){
     return{
       seriesData: [],
-      skeletonLoader: true,
+      skeletonLoader: 'display: block;',
+      movies: 'display: none;',
     }
   },
   created(){
@@ -71,7 +73,8 @@ export default {
       }
     },
     swap(){
-      this.skeletonLoader = false;
+      this.skeletonLoader = 'display: none;';
+      this.movies = 'display: block;';
     },
   },
 }

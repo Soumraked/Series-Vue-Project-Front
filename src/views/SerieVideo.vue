@@ -1,13 +1,38 @@
 <template>
   <div>
+    <div v-if="!charge">
+      Cargando episodio, espere un momento.
+    </div>
     <v-container v-if="exist && charge">
       <h2 class="pa-0 ma-0 pt-12">{{name}}</h2>
+           
+      <v-img 
+        src='https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media' 
+        @click="switchHandle" 
+        class="videoBox"
+        v-if="charge && changeVideo"
+      ></v-img>
       
+      <VideoPlayer v-if="charge && !changeVideo" :options="options" :styleVideo="styleVideo"/>
+
+      <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(1)" :disabled="disabledLeft">
+        <v-icon left>mdi-arrow-left-thick</v-icon> Anterior
+      </v-chip>
+
+      <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(2)">
+        <v-icon left>mdi-format-list-checkbox</v-icon> Episodios
+      </v-chip>
+
+      <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(3)" :disabled="disabledRight">
+        Siguiente <v-icon right>mdi-arrow-right-thick</v-icon>
+      </v-chip>
+
+      <!-- Reportar episodio -->
       <v-row justify="center">
         <v-dialog v-model="dialog" scrollable max-width="400px">
           <template v-slot:activator="{ on }">
             
-            <v-btn color="indigo darken-3" outlined v-on="on" @click="sendReport = false, dialogm1 = ''"><v-icon>mdi-flag-variant</v-icon></v-btn>
+            <v-btn color="indigo darken-3" outlined v-on="on" @click="sendReport = false, dialogm1 = ''">Reportar Episodio<v-icon>mdi-flag-variant</v-icon></v-btn>
           </template>
           <v-card v-if="!sendReport">
             <v-card-title>Reportar capítulo</v-card-title>
@@ -42,52 +67,19 @@
           </v-card>
         </v-dialog>
       </v-row>
-      
-      <v-img 
-        src='https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media' 
-        @click="switchHandle" 
-        class="videoBox"
-        v-if="changeVideo"
-      ></v-img>
-      
-      <VideoPlayer v-if="charge && !changeVideo" :options="options" :styleVideo="styleVideo"/>
+      <!-- Reportar episodio -->
 
-      <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(1)" :disabled="disabledLeft">
-        <v-icon left>mdi-arrow-left-thick</v-icon> Anterior
-      </v-chip>
-
-      <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(2)">
-        <v-icon left>mdi-format-list-checkbox</v-icon> Episodios
-      </v-chip>
-
-      <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(3)" :disabled="disabledRight">
-        Siguiente <v-icon right>mdi-arrow-right-thick</v-icon>
-      </v-chip>
       <!-- Fin chips -->
     </v-container>
     <div v-if="!exist" class="container">
       Entrada inválida, vuelva al inicio y verifique la ruta.
     </div>
 
-    <div class="text-center">
-
-      <!-- <v-snackbar
-        v-model="snackbar"
-        :timeout="5000"
-      >
-        Si el video no comienza prueba recargar la página o reportar el capítulo.
-        <v-btn
-          color="blue"
-          text
-          @click="snackbar = false"
-        >
-          Cerrar
-        </v-btn>
-      </v-snackbar> -->
-    </div>
-    <v-container>
-      <Disqus :id="this.$route.params.id" :number="this.$route.params.number"/>
+    <!-- Disqus -->
+    <v-container >
+      <Disqus :id="this.$route.params.id" :number="this.$route.params.number" :exist="exist"/>
     </v-container>
+    <!-- Disqus -->
   </div>
 </template>
 
@@ -122,7 +114,6 @@ export default {
         },
         autoplay: true
       },
-      charge: false,
       changeVideo: true,
       reportList: {
         1: 'No se reproduce el video.',

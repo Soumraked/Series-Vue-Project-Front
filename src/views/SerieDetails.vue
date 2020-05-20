@@ -28,21 +28,10 @@ export default {
     }
   },
   created(){
-    // if(!this.save.includes('SerieDetailsView')){
-    //   this.getInfo();
-    //   this.setSave('SerieDetailsView');
-    //   console.log('Guardando datos');
-    // }else{
-    //   console.log('Cargando datos');
-    //   console.log(this.serieDataVuex);
-    //   let id = this.$route.params.id;
-    //   this.data = this.serieDataVuex.id;
-    // }
     this.getInfo();
     
   },
   methods:{
-    // ...mapMutations(['setSave','setSerieData']),
     async getInfo(){
       try {
         let data = await this.axios.get('/getApi/getSerie/'+this.$route.params.id);
@@ -51,18 +40,11 @@ export default {
           this.eps = false;
         }
         this.$store.state.title = data.data.name;
-        // let dataAux = data.data;
-        // dataAux.id = this.$route.params.id.toString();
-        // this.setSerieData(dataAux);
       } catch (error) {
         console.log(error);
       }
     },
 
   },
-  // computed:{
-  //   ...mapState(['save','serieDataVuex']),
-  // }
-  
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container v-if="!load">
+    <v-container fluid :style="skeletonLoader">
       <v-sheet
         class="d-flex flex-wrap justify-space-around"
       >
@@ -15,7 +15,7 @@
         ></v-skeleton-loader>
       </v-sheet>
     </v-container>
-    <v-container v-if="load">
+    <v-container fluid :style="series">
       <v-card
         class="d-flex flex-wrap justify-space-around"
         flat
@@ -44,7 +44,9 @@ export default {
   data(){
     return{
       seriesData: [],
-      load: false
+      load: false,
+      skeletonLoader: 'display: block;',
+      series: 'display: none;',
     }
   },
   created(){
@@ -52,7 +54,7 @@ export default {
     this.getData();
   },
   mounted(){
-    setTimeout(() => (this.load = true), 1000);
+    setTimeout(() => (this.swap()), 1000);
   },
   methods:{
     async getData(){
@@ -68,6 +70,10 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    swap(){
+      this.skeletonLoader = 'display: none;';
+      this.series = 'display: block;';
     },
   },
 }
