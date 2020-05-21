@@ -35,21 +35,6 @@ Vue.use(VueRouter)
     name: 'Admin',
     component: () => import('../views/Admin.vue')
   },
-  // {
-  //   path: '/admin1',
-  //   name: 'Admin1',
-  //   component: () => import('../views/Admin1.vue')
-  // },
-  // {
-  //   path: '/admin2',
-  //   name: 'Admin2',
-  //   component: () => import('../views/Admin2.vue')
-  // },
-  // {
-  //   path: '/admin3',
-  //   name: 'Admin3',
-  //   component: () => import('../views/Admin3.vue')
-  // },
 ]
 
 const router = new VueRouter({

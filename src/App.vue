@@ -2,7 +2,6 @@
   <v-app>
     <v-container>
       <Navbar/>
-
       <v-content>
         <router-view v-title="$store.state.title"/>
       </v-content>
@@ -23,6 +22,12 @@ export default {
   data(){
     return{
     }
+  },
+  created(){
+    for(let i in this.$router.options.routes){
+      //console.log(this.$router.options.routes[i].path)
+    }
+    console.log(this.$router.history.current.name)
   },
   methods:{
     toRedirect(){

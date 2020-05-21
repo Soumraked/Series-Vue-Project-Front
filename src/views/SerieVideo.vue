@@ -3,7 +3,7 @@
     <!--  -->
     <!-- Loader video -->
     <div v-if="!charge">
-      <v-container>
+      <v-container v-if="exist">
         <h2 class="pa-0 ma-0 pt-12">Cargando episodio</h2>
         <v-img 
           src='https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media' 
@@ -12,7 +12,7 @@
       </v-container>
       
       <div class="text-center">
-        <v-overlay :value="true">
+        <v-overlay :value="loaderVideo">
           <v-progress-circular indeterminate size="64"></v-progress-circular>
         </v-overlay>
       </div>
@@ -106,6 +106,7 @@
     <!--  -->
     <!-- Episodio no encontrado -->
     <div v-if="!exist" class="container">
+      <div v-text="loaderVideo = false" style="display: none;"></div>
       Entrada inválida, vuelva al inicio y verifique la ruta.
     </div>
     <!-- Episodio no encontrado -->
@@ -124,7 +125,7 @@ export default {
   },
   data(){
     return{
-      dialogVideo: true,
+      loaderVideo: true,
       charge: false,
       sendReport: false,
       dialogReport: '',
