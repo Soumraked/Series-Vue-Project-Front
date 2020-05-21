@@ -23,7 +23,8 @@
         min-height="200"
       >
         <v-layout :wrap='true'>
-          <v-flex md3 v-for="item in seriesData" :key="item.id" class="d-flex flex-wrap justify-space-around">
+          <v-flex md3 v-for="(item, index) in seriesData" :key="index" class="d-flex flex-wrap justify-space-around">
+            <div v-if="index = 23" style="display: none;" v-text="swap()"></div>
             <Card :serie="item"/>
           </v-flex>
         </v-layout>
@@ -52,9 +53,6 @@ export default {
   created(){
     this.$store.state.title = 'Anime';
     this.getData();
-  },
-  mounted(){
-    setTimeout(() => (this.swap()), 1000);
   },
   methods:{
     async getData(){

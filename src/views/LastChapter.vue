@@ -24,10 +24,12 @@
         flat
         tile
         height="200"
+        
       > 
         <v-row>
-          <v-layout :wrap='true'>
-            <v-flex lg3 v-for="item in seriesData" :key="item.id">
+          <v-layout :wrap='true' >
+            <v-flex lg3 v-for="(item, index) in seriesData" :key="index">
+              <div v-if="index = 23" style="display: none;" v-text="swap()"></div>
               <v-col class="d-flex flex-wrap justify-space-around">
                 <Card :serie="item.data"/>
               </v-col>
@@ -55,14 +57,12 @@ export default {
       skeletonLoader: 'display: block;',
       chapters: 'display: none;',
       page_id: 'LastChapter',
+      last : 0,
     }
   },
   created(){
     this.getData();
     this.$store.state.title = 'Monos Otakos';
-  },
-  mounted(){
-    setTimeout(() => (this.swap()), 1000);
   },
   methods:{
     async getData(){

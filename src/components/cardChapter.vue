@@ -1,6 +1,6 @@
 <template>
   <div>
-  <v-card
+    <v-card
       class="my-2 pa-2"
       width="275"
       @click="redirectTo(serie.serie, serie.number)"

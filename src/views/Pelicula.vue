@@ -1,20 +1,22 @@
 <template>
   <div>
-    <v-container fluid :style="skeletonLoader">
-      <v-sheet
-        class="d-flex flex-wrap justify-space-around"
-      >
-        <v-skeleton-loader
-          class="my-2 px-2 py-1"
-          width="250"
-          height="400"
-          type="image, image"
-          loading
-          v-for="n in 20"
-          :key="n"
-        ></v-skeleton-loader>
-      </v-sheet>
+    <!-- Esqueleto de inicio -->
+    <v-container :style="skeletonLoader" fluid>
+      <v-layout :wrap='true'>
+        <v-flex lg3 v-for="n in 24" :key="n" >
+          <v-col class="d-flex flex-wrap justify-space-around">
+            <v-skeleton-loader
+              class="my-2 px-2 py-1"
+              width="250"
+              height="400"
+              type="image, image"
+              loading
+            ></v-skeleton-loader>
+          </v-col>
+        </v-flex>
+      </v-layout>
     </v-container>
+    <!-- Esqueleto de inicio -->
 
     <v-container fluid :style="movies">
       <v-card
@@ -30,6 +32,28 @@
         </v-layout>
       </v-card>     
     </v-container>
+
+    <!-- Anime -->
+    <v-container fluid :style="movies">
+      <v-card
+        class="d-flex flex-wrap justify-space-around"
+        flat
+        tile
+        height="200"
+      > 
+        <v-row>
+          <v-layout :wrap='true'>
+            <v-flex xl3 v-for="(item,index) in seriesData" :key="index" class="d-flex flex-wrap justify-space-around">
+              <v-col class="d-flex flex-wrap justify-space-around">
+                <div v-if="index = 23" style="display: none;" v-text="swap()"></div>
+                <Card :serie="item"/>
+              </v-col>
+            </v-flex>
+          </v-layout>
+        </v-row>
+      </v-card>
+    </v-container>
+    <!-- Anime -->
     
   </div>
 </template>
@@ -53,9 +77,6 @@ export default {
   created(){
     this.$store.state.title = 'Peliculas';
     this.getData();
-  },
-  mounted(){
-    setTimeout(() => (this.swap()), 1000);
   },
   methods:{
     async getData(){

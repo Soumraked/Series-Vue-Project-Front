@@ -128,9 +128,6 @@ export default {
     this.getInfo();
     this.getChapters();
   },
-  mounted(){
-    this.charge = true;
-  },
   methods:{
     async report(){
       let message = '';

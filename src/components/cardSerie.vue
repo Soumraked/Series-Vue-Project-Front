@@ -2,7 +2,7 @@
   <div>
     <v-card
       class="my-2 px-2 py-1"
-      max-width="250"
+      width="250"
       @click="redirectTo(serie.id)"
     >
       <v-img
