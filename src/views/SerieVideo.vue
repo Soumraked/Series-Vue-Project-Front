@@ -1,7 +1,19 @@
 <template>
   <div>
     <div v-if="!charge">
-      Cargando episodio, espere un momento.
+      <v-container>
+        <h2 class="pa-0 ma-0 pt-12">Cargando episodio</h2>
+        <v-img 
+          src='https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media' 
+          class="videoBox"
+        ></v-img>
+      </v-container>
+      
+      <div class="text-center">
+        <v-overlay :value="true">
+          <v-progress-circular indeterminate size="64"></v-progress-circular>
+        </v-overlay>
+      </div>
     </div>
     <v-container v-if="exist && charge">
       <h2 class="pa-0 ma-0 pt-12">{{name}}</h2>
@@ -77,7 +89,7 @@
 
     <!-- Disqus -->
     <v-container >
-      <Disqus :id="this.$route.params.id" :number="this.$route.params.number" :exist="exist"/>
+      <Disqus :id="this.$route.params.id" :number="this.$route.params.number" :exist="exist && charge"/>
     </v-container>
     <!-- Disqus -->
   </div>
@@ -95,6 +107,7 @@ export default {
   },
   data(){
     return{
+      dialogVideo: true,
       charge: false,
       sendReport: false,
       dialogReport: '',
