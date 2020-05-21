@@ -1,5 +1,7 @@
 <template>
   <div>
+    <!--  -->
+    <!-- Loader video -->
     <div v-if="!charge">
       <v-container>
         <h2 class="pa-0 ma-0 pt-12">Cargando episodio</h2>
@@ -15,9 +17,13 @@
         </v-overlay>
       </div>
     </div>
+    <!-- Loader video -->
+
+
+    <!--  -->
+    <!-- Reproductor -->
     <v-container v-if="exist && charge">
       <h2 class="pa-0 ma-0 pt-12">{{name}}</h2>
-           
       <v-img 
         src='https://firebasestorage.googleapis.com/v0/b/monosotakos.appspot.com/o/video%2FvideoPlay.JPG?alt=media' 
         @click="switchHandle" 
@@ -26,7 +32,13 @@
       ></v-img>
       
       <VideoPlayer v-if="charge && !changeVideo" :options="options" :styleVideo="styleVideo"/>
+    </v-container>
+    <!-- Reproductor -->
 
+    <!--  -->
+    <!-- Opciones del capitulo -->
+    <v-container v-if="exist">
+      <!-- Opciones debajo del episodio -->
       <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(1)" :disabled="disabledLeft">
         <v-icon left>mdi-arrow-left-thick</v-icon> Anterior
       </v-chip>
@@ -38,6 +50,7 @@
       <v-chip class="ma-2" color="indigo darken-3" outlined @click="toEpisode(3)" :disabled="disabledRight">
         Siguiente <v-icon right>mdi-arrow-right-thick</v-icon>
       </v-chip>
+      <!-- Opciones debajo del episodio -->
 
       <!-- Reportar episodio -->
       <v-row justify="center">
@@ -80,18 +93,22 @@
         </v-dialog>
       </v-row>
       <!-- Reportar episodio -->
-
-      <!-- Fin chips -->
     </v-container>
-    <div v-if="!exist" class="container">
-      Entrada inválida, vuelva al inicio y verifique la ruta.
-    </div>
+    <!-- Opciones del capitulo -->
 
+    <!--  -->
     <!-- Disqus -->
     <v-container >
       <Disqus :id="this.$route.params.id" :number="this.$route.params.number" :exist="exist && charge"/>
     </v-container>
     <!-- Disqus -->
+
+    <!--  -->
+    <!-- Episodio no encontrado -->
+    <div v-if="!exist" class="container">
+      Entrada inválida, vuelva al inicio y verifique la ruta.
+    </div>
+    <!-- Episodio no encontrado -->
   </div>
 </template>
 
