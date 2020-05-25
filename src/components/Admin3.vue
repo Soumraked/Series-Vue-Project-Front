@@ -254,6 +254,7 @@
 </template>
 
 <script>
+const pattern = new RegExp('^[A-Z,0-9]+$', 'i');
 export default {
   data() {
     return {
@@ -283,6 +284,7 @@ export default {
       nameAlternative: '',
       nameAlternativeRules: [
         v => !!v || 'Name is required',
+        v => pattern.test(v) || 'Este campo solo debe tener letras o números.'
       ],
       //</Name>
       

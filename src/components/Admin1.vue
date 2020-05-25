@@ -207,6 +207,7 @@
 </template>
 
 <script>
+  const pattern = new RegExp('^[A-Z,0-9]+$', 'i');
   export default {
     data: () => ({
       loadingbtn: false,
@@ -227,6 +228,7 @@
       nameAlternative: '',
       nameAlternativeRules: [
         v => !!v || 'Name is required',
+        v => pattern.test(v) || 'Este campo solo debe tener letras o números.'
       ],
       description: '',
       descriptionRules: [
@@ -265,6 +267,7 @@
         this.items = data.data;
       },
       async validate () {
+        
         if(this.$refs.form.validate()){
           this.loadingbtn = true;
           let carpeta = (this.nameAlternative.toString().toLowerCase()).replace(/\s+/g, '');
