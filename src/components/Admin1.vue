@@ -15,6 +15,14 @@
             required
           ></v-text-field>
 
+          <v-text-field
+            autocomplete="off"
+            v-model="nameAlternative"
+            :rules="nameAlternativeRules"
+            label="Nombre Alternativo (será id)"
+            required
+          ></v-text-field>
+
           <v-textarea
             v-model="description"
             :rules="descriptionRules"
@@ -216,6 +224,10 @@
       nameRules: [
         v => !!v || 'Name is required',
       ],
+      nameAlternative: '',
+      nameAlternativeRules: [
+        v => !!v || 'Name is required',
+      ],
       description: '',
       descriptionRules: [
         v => !!v || 'Description is required',
@@ -255,7 +267,7 @@
       async validate () {
         if(this.$refs.form.validate()){
           this.loadingbtn = true;
-          let carpeta = (this.name.toString().toLowerCase()).replace(/\s+/g, '');
+          let carpeta = (this.nameAlternative.toString().toLowerCase()).replace(/\s+/g, '');
           let data = await this.axios.get(`/serie/exist/${carpeta}`);
           if(data.data.data){
             this.mensaje = 'Ya existe serie a ingresar.'
@@ -278,7 +290,7 @@
       },
       async send(){
         try {
-          let carpeta = (this.name.toString().toLowerCase()).replace(/\s+/g, '');
+          let carpeta = (this.nameAlternative.toString().toLowerCase()).replace(/\s+/g, '');
 
           const cover = new FormData();
           cover.append('image',this.coverInput, this.coverInput.name);
@@ -299,6 +311,7 @@
 
           let seriePost = await this.axios.post(`/serie/create`, {
             'name': this.name,
+            'nameAlternative': this.nameAlternative,
             'language': this.selectLanguage,
             'subtitles': this.selectSubtitle,
             'dateOrigin': this.date.toString(),

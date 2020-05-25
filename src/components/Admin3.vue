@@ -53,6 +53,18 @@
                 </v-col>
                 <!-- Name -->
 
+                <!-- Name -->
+                <v-col class="px-5">
+                  <v-text-field
+                    autocomplete="off"
+                    v-model="nameAlternative"
+                    :rules="nameAlternativeRules"
+                    label="Nombre alternativo (será la id)"
+                    required
+                  ></v-text-field>
+                </v-col>
+                <!-- Name -->
+
                 <!-- Description -->
                 <v-col class="px-5">
                   <v-textarea
@@ -267,6 +279,14 @@ export default {
       ],
       //</Name>
 
+      //<Name>
+      nameAlternative: '',
+      nameAlternativeRules: [
+        v => !!v || 'Name is required',
+      ],
+      //</Name>
+      
+
       //<Description>
       description: '',
       descriptionRules: [
@@ -366,7 +386,7 @@ export default {
     async validate () {
       if(this.$refs.form.validate()){
         this.loadingbtn = true;
-        let carpeta = (this.name.toString().toLowerCase()).replace(/\s+/g, '');
+        let carpeta = (this.nameAlternative.toString().toLowerCase()).replace(/\s+/g, '');
         let data = await this.axios.get(`/serie/exist/${carpeta}`);
         if(data.data.data){
           this.mensaje = 'Ya existe serie a ingresar.'
@@ -383,7 +403,7 @@ export default {
     //Send data to database 2
     async send(){
       try {
-        let carpeta = (this.name.toString().toLowerCase()).replace(/\s+/g, '');
+        let carpeta = (this.nameAlternative.toString().toLowerCase()).replace(/\s+/g, '');
 
         const cover = new FormData();
         cover.append('image',this.cover, this.cover.name);
@@ -404,6 +424,7 @@ export default {
 
         let seriePost = await this.axios.post(`/serie/create`, {
           'name': this.name,
+          'nameAlternative': this.nameAlternative,
           'language': this.selectLanguage,
           'subtitles': this.selectSubtitle,
           'dateOrigin': this.date.toString(),
@@ -440,7 +461,7 @@ export default {
           }
         }
         //Introduction ID
-        let id = (this.name.toString().toLowerCase()).replace(/\s+/g, '');
+        let id = (this.nameAlternative.toString().toLowerCase()).replace(/\s+/g, '');
         this.sendChapter(id, txtAll);
       };
       reader.readAsText(this.textUrl);  

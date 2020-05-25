@@ -4,7 +4,6 @@
       <v-radio-group v-model="radioGroup" >
         <v-flex :wrap="true" class="d-flex flex-wrap justify-space-around">
           <v-radio
-          
             v-for="(item, index) in option"
             :key="index"
             :label="item"
